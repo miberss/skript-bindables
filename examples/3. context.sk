@@ -1,0 +1,49 @@
+
+#
+# This example demonstrates a real use case for bindables
+# by integrating them into a structured game state.
+#
+# - A struct contains a bindable score value
+# - Multiple callbacks listen to the same bindable
+# - One callback updates the score label
+# - Another callback updates the highscore and its label
+#
+# This demonstrates:
+# - Using bindables as reactive state
+# - Separating logic (score vs highscore)
+# - Automatically updating UI/state when change happens
+#
+
+struct game:
+    score: bindable struct
+    highscore: integer = 0
+    score_label: string
+    highscore_label: string
+
+on load:
+    set {_game} to a game struct instance
+
+    # here we add game to the back of the args of our functions to access the game within it.
+    create section with {_new}, {_old} stored in {_score}:
+        update_score_label({_game}, {_new})
+    
+    create section with {_new}, {_old} stored in {_highscore}:
+        update_highscore({_game}, {_new})
+
+    # set the bindable
+    set {_game}->score to bindable of 0 using callbacks {_score}, {_highscore}
+
+    # test out highscore label and score label being set
+    set {_game}->score's bindable value to 10
+
+    broadcast {_game}->highscore_label
+
+# our callbacks
+local function update_score_label(game: game struct, new: integer):
+    set {_game}->score_label to "&aScore: %{_new}%"
+
+local function update_highscore(game: game struct, new: integer):
+    if {_new} <= {_game}->highscore:
+        stop
+    set {_game}->highscore to {_new}
+    set {_game}->highscore_label to "&cHighscore: %{_new}%"

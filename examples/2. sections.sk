@@ -1,0 +1,33 @@
+
+#
+# This example shows how to define a reusable section and
+# attach it to a bindable.
+#
+# This demonstrates:
+# - Decoupling bindables from hard-coded functions
+# - Cleaner and more flexible callback definitions
+# - Bindables reacting to both direct assignment and mutation
+#
+# Use this when:
+# - You want reusable or configurable callbacks (that don't explicitly
+#   use the new and old args, next example shows this)
+# - You need closure-like behavior with captured variables
+#
+
+using reflection
+
+on load:
+    # reusable 
+    create section with {_new}, {_old} stored in {_broadcast}:
+        broadcast {_new}
+
+    # create our bindable
+    set {_score} to bindable using callback {_broadcast}
+
+    # set it to 5 (see the broadcast, it calls broadcast)
+    set {_score}'s current value to 5
+
+    bind {_broadcast} to {_score}
+
+    # this broadcasts twice, since we double binded {_broadcast}.
+    add 1 to {_score}'s current value

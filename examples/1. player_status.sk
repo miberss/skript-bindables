@@ -1,0 +1,27 @@
+
+#
+# This example demonstrates the most simple way to use a bindable.
+#
+# - A bindable is created with a function or section callback
+# - Any change to the bindable's value runs this callback
+# - The callback receives the new and old values.
+#
+# This example is a "hello world" to show:
+# - How bindables emit their changes
+# - How functions are ran automatically
+#
+
+using reflection
+
+on load:
+    # create our bindable
+    set {_status} to bindable using callback (function "emit_change")
+
+    # set it to 'HAPPY' (see the broadcast, it calls emit_change)
+    set {_status}'s current value to "HAPPY"
+
+    # we are unhappy now
+    set {_status}'s current value to ("UN%{_status}'s current value%")
+
+local function emit_change(new: string, old: string = {_}):
+    broadcast {_new}

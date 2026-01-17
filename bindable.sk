@@ -1,8 +1,14 @@
-using script reflection
 
-expression [a] bindable [with %-object%] [using callback[s] %-objects%]:
+using reflection
+
+struct bindable:
+	value: object
+	previous: object
+	callbacks: objects
+
+expression [a] bindable [(with|of) [value] %-object%] [(with|using) callback[s] %-objects%]:
 	get:
-		return a_bindable(expr-1, exprs-2)
+		return a_bindable(expr-1, exprs-2, expr-1)
 
 bindable struct property (old|previous) [bindable] value:
 	return type: object
@@ -17,7 +23,7 @@ bindable struct property (old|previous) [bindable] value:
 	delete:
 		delete field previous of expr-1
 
-bindable struct property [current] [bindable] value:
+bindable struct property (current [bindable]|bindable) value:
 	return type: object
 	get:
 		return bind_get(expr-1)
@@ -38,11 +44,6 @@ effect unbind %objects% from %bindable struct%:
 	trigger:
 		bind_unbind(expr-2, exprs-1)
 
-struct bindable:
-	value: object
-	previous: object
-	callbacks: objects
-
 function a_bindable(value: object = {_}, callbacks: objects = {_}, previous: object = {_}) -> bindable struct:
 	return bindable struct instance:
 		value: {_value}
@@ -58,32 +59,39 @@ function bind_add(bindable: bindable struct, value: object) -> boolean:
 	add {_value} to {_current}
 	set field value of {_bindable} to {_current}
 	trigger_update({_bindable}, {_value})
+	return true
 
 function bind_set(bindable: bindable struct, value: object) -> boolean:
 	set field previous of {_bindable} to field value of {_bindable}
 	set field value of {_bindable} to {_value}
 	trigger_update({_bindable}, {_value})
+	return true
 
 function bind_set_silently(bindable: bindable struct, value: object) -> boolean:
 	set field value of {_bindable} to {_value}
+	return true
 
-function bind_remove(bindable: bindable struct, value: object):: boolean:
+function bind_remove(bindable: bindable struct, value: object) -> boolean:
 	set {_current} to field value of {_bindable}
 	set field previous of {_bindable} to {_current}
 	remove {_value} from {_current}
 	set field value of {_bindable} to {_current}
 	trigger_update({_bindable}, {_value})
+	return true
 
 function bind_delete(bindable: bindable struct) -> boolean:
 	set field previous of {_bindable} to field value of {_bindable}
 	delete field value of {_bindable}
 	trigger_update({_bindable}, {_value})
+	return true
 
 function bind_dispose(bindable: bindable struct) -> boolean:
 	delete {_bindable}
+	return true
 
 function bind_bind(bindable: bindable struct, callbacks: objects) -> boolean:
 	add {_callbacks::*} to field callbacks of {_bindable}
+	return true
 
 function bind_unbind(bindable: bindable struct, callbacks: objects) -> boolean:
 	set {_bindable_callbacks::*} to field callbacks of {_bindable}
@@ -91,23 +99,27 @@ function bind_unbind(bindable: bindable struct, callbacks: objects) -> boolean:
 		for {_callback} in ({_bindable_callbacks::*} where [equal(input, {_remove}) = true]):
 			remove {_callback} from field callbacks of {_bindable}
 	remove {_callbacks::*} from field callbacks of {_bindable}
+	return true
 
-function trigger_update(bindable: bindable struct, value: object = {_}):
-	set {_value} to {_value} ? field value of {_bindable}
+function bind_update(bindable: bindable struct, value: object = {_}) -> boolean:
+	set {_current} to {_value} ? field value of {_bindable}
+	set {_previous} to field previous of {_bindable}
 	for {_callback} in field callbacks of {_bindable}:
-		if {_callback} is a section:
-			run section {_callback} with arguments {_bindable}, {_value}
+		if {_callback} is a function:
+			run {_callback} with arguments {_current}, {_previous}
 			continue
-		run {_callback} with arguments {_bindable}, {_value}
 
-function lerp_bindable(bindable: bindable struct, progress: number) -> number:
+		run section {_callback} with arguments {_current}, {_previous}
+	return true
+
+function bind_lerp(bindable: bindable struct, progress: number) -> number:
 	set {_value} to field value of {_bindable}
 	set {_previous} to field previous of {_bindable}
-    if {_previous} = {_value}:
-        return {_value}
-    if {_progress} >= 1:
-        set field previous of {_bindable} to {_value}
-    return {_previous} + ({_value} - {_previous}) * {_progress}
+	if {_previous} = {_value}:
+		return {_value}
+	if {_progress} >= 1:
+		set field previous of {_bindable} to {_value}
+	return {_previous} + ({_value} - {_previous}) * {_progress}
 
 local function equal(a: function, b: function) -> boolean:
 	if all:
