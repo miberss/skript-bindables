@@ -1,17 +1,17 @@
 
 #
-# This example shows how to define a reusable section and
-# attach it to a bindable.
+# This example shows how to make a section and bind it to a value.
 #
-# This demonstrates:
-# - Decoupling bindables from hard-coded functions
-# - Cleaner and more flexible callback definitions
-# - Bindables reacting to both direct assignment and mutation
+# This demonstrates decoupling bindables from their
+# callbacks, enabling cleaner, more flexible, and
+# reusable definitions of logic. The bindable reacts both
 #
-# Use this when:
-# - You want reusable or configurable callbacks (that don't explicitly
-#   use the new and old args, next example shows this)
-# - You need closure-like behavior with captured variables
+# This is useful when you want configurable or
+# reusable callbacks, or when you need closure-like
+# behavior with captured variables.
+#
+# The bindable also supports multiple bindings of the same
+# callback as shown.
 #
 
 using reflection

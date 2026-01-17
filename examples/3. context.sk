@@ -1,17 +1,14 @@
 
 #
-# This example demonstrates a real use case for bindables
+# This example shows off a use case for bindables;
 # by integrating them into a structured game state.
 #
-# - A struct contains a bindable score value
-# - Multiple callbacks listen to the same bindable
-# - One callback updates the score label
-# - Another callback updates the highscore and its label
+# A struct contains a bindable score value, multiple callbacks
+# listen to the same bindable, one callback updates the score
+# label and another updates the highscore label when needed.
 #
-# This demonstrates:
-# - Using bindables as reactive state
-# - Separating logic (score vs highscore)
-# - Automatically updating UI/state when change happens
+# This demonstrates using bindables as reactive state, separating
+# logic, automatically updating UI/state when change happens
 #
 
 struct game:

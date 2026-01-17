@@ -2,13 +2,12 @@
 #
 # This example demonstrates the most simple way to use a bindable.
 #
-# - A bindable is created with a function or section callback
-# - Any change to the bindable's value runs this callback
-# - The callback receives the new and old values.
+# A bindable is created with a function or section callback,
+# any change to the bindable's value runs this callback, and
+# the callback receives the new and old values.
 #
-# This example is a "hello world" to show:
-# - How bindables emit their changes
-# - How functions are ran automatically
+# This example is a "hello world" to show how bindables emit
+# their changes and how the functions are ran automatically
 #
 
 using reflection
