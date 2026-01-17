@@ -17,8 +17,6 @@ You can use `bind_update(bindable, value?)` to run the callbacks and update the 
 
 You can also use `bind_set_silently(bindable, value)` which will set the value of the bindable without running any of the callbacks
 
-There's also bindable lerping through `bind_lerp(bindable, progress: number between 0 and 1)` which allows you to smoothly interpolate between the previous value and the current one, allowing for easy animation of UI.
-
 ## Contributing
 Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests on the [GitHub repository](https://github.com/miberss/skript-bindables#).
 

@@ -112,15 +112,6 @@ function bind_update(bindable: bindable struct, value: object = {_}) -> boolean:
 		run section {_callback} with arguments {_current}, {_previous}
 	return true
 
-function bind_lerp(bindable: bindable struct, progress: number) -> number:
-	set {_value} to field value of {_bindable}
-	set {_previous} to field previous of {_bindable}
-	if {_previous} = {_value}:
-		return {_value}
-	if {_progress} >= 1:
-		set field previous of {_bindable} to {_value}
-	return {_previous} + ({_value} - {_previous}) * {_progress}
-
 local function equal(a: function, b: function) -> boolean:
 	if all:
 		name of {_a} = name of {_b}
