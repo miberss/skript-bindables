@@ -58,13 +58,13 @@ function bind_add(bindable: bindable struct, value: object) -> boolean:
 	set field previous of {_bindable} to {_current}
 	add {_value} to {_current}
 	set field value of {_bindable} to {_current}
-	trigger_update({_bindable}, {_value})
+	bind_update({_bindable}, {_value})
 	return true
 
 function bind_set(bindable: bindable struct, value: object) -> boolean:
 	set field previous of {_bindable} to field value of {_bindable}
 	set field value of {_bindable} to {_value}
-	trigger_update({_bindable}, {_value})
+	bind_update({_bindable}, {_value})
 	return true
 
 function bind_set_silently(bindable: bindable struct, value: object) -> boolean:
@@ -76,13 +76,13 @@ function bind_remove(bindable: bindable struct, value: object) -> boolean:
 	set field previous of {_bindable} to {_current}
 	remove {_value} from {_current}
 	set field value of {_bindable} to {_current}
-	trigger_update({_bindable}, {_value})
+	bind_update({_bindable}, {_value})
 	return true
 
 function bind_delete(bindable: bindable struct) -> boolean:
 	set field previous of {_bindable} to field value of {_bindable}
 	delete field value of {_bindable}
-	trigger_update({_bindable}, {_value})
+	bind_update({_bindable}, {_value})
 	return true
 
 function bind_dispose(bindable: bindable struct) -> boolean:
